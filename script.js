@@ -18,9 +18,9 @@ const ball = {
 const platform = {
     x: 10,
     y: canvas.height - 30,
-    width: 200,
+    width: 150,
     height: 20,
-    speed: 200,
+    speed: 300,
     leftKey: false,
     rightKey: false,
 }
@@ -79,7 +79,7 @@ let pTimestamp = 0;
 function loop(timestamp){
     requestAnimationFrame(loop)
 
-    const dTimestamp = timestamp - pTimestamp;
+    const dTimestamp = Math.min(16.7, timestamp - pTimestamp);
     const secondPart = dTimestamp / 1000;
     pTimestamp = timestamp;
 
@@ -146,7 +146,9 @@ function loop(timestamp){
     }
 
     if(isIntersection(platform, ball)) {
-        ball.angle = Math.PI * 2 - ball.angle;
+        const x = ball.x + ball.width / 2;
+        const percent = (x - platform.x) / platform.width;
+        ball.angle = Math.PI - Math.PI * 0.8 * (percent +0.05);
     }
 
     drawRect(ball);
