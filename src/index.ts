@@ -1,3 +1,8 @@
+// @ts-ignore
+import sprites from './sprites/sprites.png'
+// @ts-ignore
+import space from './sprites/space.jpg'
+
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
@@ -5,10 +10,10 @@ canvas.width = 500;
 canvas.height = 500;
 
 const image = new Image;
-image.src = "sprites.png"
+image.src = sprites
 
 const background = new Image;
-background.src = "space.jpg";
+background.src = space;
 
 const atlass = {
     ball: {
@@ -304,7 +309,6 @@ function toggleItem (array, item) {
 }
 
 function drawBall (ball){
-    context.beginPath();
     context.drawImage(
         image,
         atlass.ball.x, atlass.ball.y, atlass.ball.width, atlass.ball.height,
