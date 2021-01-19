@@ -2,6 +2,10 @@
 import sprites from './sprites/sprites.png'
 // @ts-ignore
 import space from './sprites/space.jpg'
+import Atlass from "./classes/Atlass";
+import Ball from "./classes/Ball";
+import BaseBlock from "./classes/BaseBlock";
+import Platform from "./classes/Platform";
 
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
@@ -16,68 +20,23 @@ const background = new Image;
 background.src = space;
 
 const atlass = {
-    ball: {
-        x: 3,
-        y: 587,
-        width: 38,
-        height: 38,
-    },
+    ball: new Atlass(3,587, 38, 38),
 
-    platform: {
-        x: 108,
-        y: 176,
-        width: 210,
-        height: 18,
-    },
+    platform: new Atlass(108,176,210, 18),
 
-    yellow: {
-        x: 174,
-        y: 36,
-        width: 42,
-        height: 20,
-    },
+    yellow: new Atlass(174, 36, 42,20),
 
-    red: {
-        x: 0,
-        y: 36,
-        width: 42,
-        height: 20,
-    },
+    red: new Atlass(0, 36,42, 20),
 
-    green: {
-        x: 174,
-        y: 0,
-        width: 42,
-        height: 20,
-    },
+    green: new Atlass(174, 0, 42,20),
 
-    pink: {
-        x: 116,
-        y: 36,
-        width: 42,
-        height: 20,
-    }
-}
-
-let ball = {
-    x: canvas.width / 2,
-    y: canvas.height -50,
-    width: 10,
-    height: 10,
-    speed: 200,
-    angle: Math.PI / 4 + Math.random() * Math.PI / 2,
+    pink: new Atlass(116, 36, 42, 20)
 
 }
 
-let platform = {
-    x: canvas.width / 2 - 100,
-    y: canvas.height - 30,
-    width: 150,
-    height: 20,
-    speed: 300,
-    leftKey: false,
-    rightKey: false,
-}
+let ball = new Ball(canvas, atlass.ball, canvas.width / 2, canvas.height -50)
+
+let platform = new Platform(canvas, atlass.platform, canvas.width / 2 - 100, canvas.height - 30)
 
 let blocks = []
 
@@ -95,10 +54,10 @@ for (let x=0; x<8; x++) {
 }
 
 const limits = [
-    { x: 0, y: -10, width: canvas.width, height: 10 },
-    { x: canvas.width, y: 0, width: 10, height: canvas.height },
-    { x: 0, y: canvas.height, width: canvas.width, height: 10 },
-    { x: -10, y: 0, width: 10, height: canvas.height },
+    new BaseBlock(0, -10, canvas.width, 10),
+    new BaseBlock(canvas.width, 0, 10, canvas.height),
+    new BaseBlock(0, canvas.height, canvas.width, 10),
+    new BaseBlock(-10, 0, 10, canvas.height),
 ]
 
 document.addEventListener('keydown', (event) => {
@@ -111,25 +70,9 @@ document.addEventListener('keydown', (event) => {
     if(event.key === 'Enter' && !playing) {
         playing = true
 
-        ball = {
-            x: canvas.width / 2,
-            y: canvas.height -50,
-            width: 10,
-            height: 10,
-            speed: 200,
-            angle: Math.PI / 4 + Math.random() * Math.PI / 2,
+        ball = new Ball(canvas, atlass.ball, canvas.width / 2, canvas.height -50)
 
-        }
-
-        platform = {
-            x: canvas.width / 2 - 100,
-            y: canvas.height - 30,
-            width: 150,
-            height: 20,
-            speed: 300,
-            leftKey: false,
-            rightKey: false,
-        }
+        platform = new Platform(canvas, atlass.platform, canvas.width / 2 - 100, canvas.height - 30)
 
         blocks = []
 
@@ -172,9 +115,10 @@ function loop(timestamp){
         const secondPart = dTimestamp / 1000;
         pTimestamp = timestamp;
 
-
-        ball.x += secondPart * ball.speed * Math.cos(ball.angle);
-        ball.y -= secondPart * ball.speed * Math.sin(ball.angle);
+        ball.updatePosition(
+            ball.x + secondPart * ball.speed * Math.cos(ball.angle),
+            ball.y - secondPart * ball.speed * Math.sin(ball.angle)
+        );
 
         if (platform.leftKey) {
             platform.x = Math.max(0, platform.x - secondPart * platform.speed)
@@ -185,39 +129,21 @@ function loop(timestamp){
         }
 
         for(const block of blocks) {
-            if(isIntersection(block, ball)){
+            if(ball.isIntersectedBy(block)){
 
 
-                const ctrl1 = {
-                    x: block.x - 10,
-                    y: block.y - 10,
-                    width: 10 + block.width,
-                    height: 10
-                }
+                const ctrl1 = new BaseBlock(block.x - 10, block.y - 10, 10 + block.width, 10)
 
-                const ctrl2 = {
-                    x: block.x - block.width,
-                    y: block.y - 10,
-                    width: 10,
-                    height: 10 + block.height
-                }
-                const ctrl3 = {
-                    x: block.x,
-                    y: block.y + block.height,
-                    width: block.width + 10,
-                    height: 10
-                }
+                const ctrl2 = new BaseBlock(block.x - block.width, block.y - 10, 10, 10 + block.height)
 
-                const ctrl4 = {
-                    x: block.x - 10,
-                    y: block.y,
-                    width: 10,
-                }
+                const ctrl3 = new BaseBlock(block.x,block.y + block.height,block.width + 10,10)
 
-                if(isIntersection(ctrl1, ball) || isIntersection(ctrl3, ball)) {
+                const ctrl4 = new BaseBlock(block.x - 10, block.y, 10, block.height + 10)
+
+                if(ball.isIntersectedBy(ctrl1) || ball.isIntersectedBy(ctrl3)) {
                     ball.angle = Math.PI * 2 - ball.angle
-                } else if(isIntersection(ctrl2, ball) || isIntersection(ctrl4, ball)) {
-                    height: block.height + 10
+                }
+                if(ball.isIntersectedBy(ctrl2) || ball.isIntersectedBy(ctrl4)) {
                     ball.angle = Math.PI - ball.angle
                 }
 
@@ -227,19 +153,19 @@ function loop(timestamp){
             }
         }
 
-        if(isIntersection(limits[0], ball) || isIntersection(limits[2], ball)){
+        if(ball.isIntersectedBy(limits[0]) || ball.isIntersectedBy(limits[2])){
             ball.angle = Math.PI * 2 - ball.angle
         }
 
-        if(isIntersection(limits[1], ball) || isIntersection(limits[3], ball)){
+        if(ball.isIntersectedBy(limits[1]) || ball.isIntersectedBy(limits[3])){
             ball.angle = Math.PI - ball.angle
         }
 
-        if(isIntersection(limits[2], ball)){
+        if(ball.isIntersectedBy(limits[2])){
             playing = false;
         }
 
-        if(isIntersection(platform, ball)) {
+        if(ball.isIntersectedBy(platform)) {
             const x = ball.x + ball.width / 2;
             const percent = (x - platform.x) / platform.width;
             ball.angle = Math.PI - Math.PI * 0.8 * (percent +0.05);
@@ -247,9 +173,11 @@ function loop(timestamp){
 
     }
 
-    drawBall(ball);
+    // drawBall(ball);
 
-    drawPlatform(platform);
+    // ball.render()
+
+    platform.render();
 
 
     for (const block of blocks) {
@@ -265,39 +193,6 @@ function clearCanvas () {
     context.drawImage(background, 0, 0, canvas.width, canvas.height)
 }
 
-function isIntersection (blockA, blockB) {
-    const pointsA = [
-        {x: blockA.x, y: blockA.y},
-        {x: blockA.x + blockA.width, y: blockA.y},
-        {x: blockA.x, y: blockA.y + blockA.height},
-        {x: blockA.x + blockA.width, y: blockA.y + blockA.height}
-    ]
-
-    for (const pointA of pointsA) {
-        if(blockB.x <= pointA.x && pointA.x <= blockB.x + blockB.width && blockB.y <=
-            pointA.y && pointA.y <= blockB.y + blockB.height){
-            return true;
-        }
-    }
-
-    const pointsB = [
-        {x: blockB.x, y: blockB.y},
-        {x: blockB.x + blockB.width, y: blockB.y},
-        {x: blockB.x, y: blockB.y + blockB.height},
-        {x: blockB.x + blockB.width, y: blockB.y + blockB.height}
-    ]
-
-    for (const pointB of pointsB) {
-        if(blockA.x <= pointB.x && pointB.x <= blockA.x + blockA.width && blockA.y <=
-            pointB.y && pointB.y <= blockA.y + blockA.height){
-            return true;
-        }
-    }
-
-    return false;
-
-}
-
 function toggleItem (array, item) {
     const indexOfItem = array.indexOf(item);
 
@@ -308,13 +203,6 @@ function toggleItem (array, item) {
     }
 }
 
-function drawBall (ball){
-    context.drawImage(
-        image,
-        atlass.ball.x, atlass.ball.y, atlass.ball.width, atlass.ball.height,
-        ball.x, ball.y, ball.width, ball.height
-    )
-}
 
 function drawBlock (block) {
     const { color } = block;
@@ -325,13 +213,6 @@ function drawBlock (block) {
     )
 }
 
-function drawPlatform (platform) {
-    context.drawImage(
-        image,
-        atlass.platform.x, atlass.platform.y, atlass.platform.width, atlass.platform.height,
-        platform.x, platform.y, platform.width, platform.height
-    )
-}
 
 function getRandom (array) {
     const index = Math.floor(Math.random() * array.length)
