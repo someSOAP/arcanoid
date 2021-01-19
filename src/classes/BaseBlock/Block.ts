@@ -1,6 +1,6 @@
 import CanvasObjectInterface from "../../interfaces/CanvasObjectInterface";
 
-class BaseBlock implements CanvasObjectInterface{
+class BaseBlock implements CanvasObjectInterface {
     x: number;
     y: number;
     width: number;
@@ -13,7 +13,7 @@ class BaseBlock implements CanvasObjectInterface{
         this.height = height;
     }
 
-    isIntersectedBy (blockB: BaseBlock) {
+    isIntersectedWith (blockB: BaseBlock): boolean {
         const pointsA = [
             {x: this.x, y: this.y},
             {x: this.x + this.width, y: this.y},

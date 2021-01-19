@@ -23,7 +23,7 @@ class Sprite extends Block {
         this.atlass = atlass
     }
 
-    updatePosition(x: number, y: number) {
+    updatePosition (x: number, y: number) : void {
         this.x = x;
         this.y = y;
 
@@ -31,7 +31,7 @@ class Sprite extends Block {
     }
 
 
-    render(){
+    render() : void{
         const { context, atlass, x, y, width, height } = this;
         context.drawImage(
             spriteImg,
