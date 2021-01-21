@@ -1,11 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react'
 import arkanoid from "./game";
+import { v4 as uuidv4 } from 'uuid';
+import { GameParams } from "@/types/types";
 
+const App: React.FC = () => {
 
-const App = () => {
-
-    // const [currentGameParams, setCurrentGameParams] = useState({id: undefined})
     const [documentSize, setDocumentSize] = useState<[number, number]>([0, 0]);
+    const gameParams = useRef<GameParams>({id: ''})
     const canvasRef = useRef(null);
 
     useEffect(() => {
@@ -23,8 +24,8 @@ const App = () => {
 
         canvas.width = width
         canvas.height = height
-
-        arkanoid(canvasRef.current)
+        gameParams.current.id = uuidv4()
+        arkanoid(canvasRef.current, gameParams.current)
     }, documentSize)
 
 

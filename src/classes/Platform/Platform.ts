@@ -1,6 +1,6 @@
 import Sprite from "../Sprite";
-import Atlass from "../Atlass";
 import Ball from "../Ball";
+import { platform as platformAtlas } from '../../sprites/atlas'
 
 class Platform extends Sprite {
     canvas: HTMLCanvasElement;
@@ -10,12 +10,11 @@ class Platform extends Sprite {
 
     constructor (
         canvas: HTMLCanvasElement,
-        atlass: Atlass,
         x: number,
         y: number,
     ) {
         const context: CanvasRenderingContext2D = canvas.getContext('2d');
-        super(context, atlass, x, y, 150, 20);
+        super(context, platformAtlas, x, y, 150, 20);
 
         this.canvas = canvas;
         this.speed = 300;

@@ -1,26 +1,32 @@
-import Ball from "./classes/Ball";
-import BaseBlock from "./classes/BaseBlock";
-import Platform from "./classes/Platform";
-import Block from "./classes/Block";
-import drawResult from "./utils/drawResult";
-import clearCanvas from "./utils/clearCanvas";
-import toggleItem from "./utils/toggleItem";
-import initBlocks from "./utils/initBlocks";
-import atlass from "./sprites/atlass";
+import Ball from "@/classes/Ball";
+import BaseBlock from "@/classes/BaseBlock";
+import Platform from "@/classes/Platform";
+import Block from "@/classes/Block";
+import drawResult from "@/utils/drawResult";
+import clearCanvas from "@/utils/clearCanvas";
+import toggleItem from "@/utils/toggleItem";
+import initBlocks from "@/utils/initBlocks";
+import { GameParams } from "@/types/types"
+import Limits from "@/classes/Limits";
 
-function arkanoid(canvas: HTMLCanvasElement){
+const arkanoid = (canvas: HTMLCanvasElement, gameParams: GameParams) => {
 
-    let ball: Ball = new Ball(canvas, atlass.get("ball"), canvas.width / 2, canvas.height -50)
-    let platform: Platform = new Platform(canvas, atlass.get("platform"), canvas.width / 2 - 100, canvas.height - 30)
+    let slowDownCf: number = 1000
+    let ball: Ball = new Ball(canvas, canvas.width / 2, canvas.height -50)
+    let platform: Platform = new Platform(canvas, canvas.width / 2 - 100, canvas.height - 30)
     let blocks: Array<Block> = initBlocks(canvas);
 
-    const limits: Map<String, BaseBlock> = new Map()
-    limits.set("up",    new BaseBlock(0, -10, canvas.width, 10))
-    limits.set("right", new BaseBlock(canvas.width, 0, 10, canvas.height))
-    limits.set("down",  new BaseBlock(0, canvas.height, canvas.width, 10))
-    limits.set("left",  new BaseBlock(-10, 0, 10, canvas.height))
+    const limits: Limits = new Limits(
+        new BaseBlock(0, -10, canvas.width, 10),
+        new BaseBlock(canvas.width, 0, 10, canvas.height),
+        new BaseBlock(0, canvas.height, canvas.width, 10),
+        new BaseBlock(-10, 0, 10, canvas.height)
+    )
 
     document.onkeydown = (event) => {
+        if(event.key === 'ArrowUp') {
+            slowDownCf = 400
+        }
         if(event.key === 'ArrowLeft') {
             platform.leftKey = true
         }
@@ -29,13 +35,16 @@ function arkanoid(canvas: HTMLCanvasElement){
         }
         if(event.key === 'Enter' && !playing) {
             playing  = true
-            ball     = new Ball(canvas, atlass.get("ball"), canvas.width / 2, canvas.height -50)
-            platform = new Platform(canvas, atlass.get("platform"), canvas.width / 2 - 100, canvas.height - 30)
+            ball     = new Ball(canvas, canvas.width / 2, canvas.height -50)
+            platform = new Platform(canvas, canvas.width / 2 - 100, canvas.height - 30)
             blocks   = initBlocks(canvas)
         }
     }
 
     document.onkeyup = (event) => {
+        if(event.key === 'ArrowUp') {
+            slowDownCf = 1000
+        }
         if(event.key === 'ArrowLeft') {
             platform.leftKey = false;
         }
@@ -44,18 +53,24 @@ function arkanoid(canvas: HTMLCanvasElement){
         }
     }
 
-    let pTimestamp = 0;
-    let playing = false;
+    let pTimestamp: number = 0;
+    let playing: boolean = false;
 
-    void function loop(timestamp){
-        requestAnimationFrame(loop)
+    const gameId: string = gameParams.id;
+
+    void function loop(timestamp: number){
+        if(gameId === gameParams.id){
+            requestAnimationFrame(loop)
+        } else {
+            return void 0;
+        }
 
         clearCanvas(canvas);
 
         if(playing){
 
             const dTimestamp : number = Math.min(16.7, timestamp - pTimestamp);
-            const secondPart : number = dTimestamp / 1000;
+            const secondPart : number = dTimestamp / slowDownCf;
             pTimestamp = timestamp;
 
             ball.updatePosition(secondPart);
@@ -74,15 +89,15 @@ function arkanoid(canvas: HTMLCanvasElement){
                 }
             }
 
-            if(ball.isIntersectedWith(limits.get("up")) || ball.isIntersectedWith(limits.get("down"))) {
+            if(ball.isIntersectedWith(limits.up)) {
                 ball.horizontalHit()
             }
 
-            if(ball.isIntersectedWith(limits.get("right")) || ball.isIntersectedWith(limits.get("left"))) {
+            if(ball.isIntersectedWith(limits.right) || ball.isIntersectedWith(limits.left)) {
                 ball.verticalHit()
             }
 
-            if(ball.isIntersectedWith(limits.get("down"))) {
+            if(ball.isIntersectedWith(limits.down)) {
                 playing = false;
             }
 
@@ -99,7 +114,8 @@ function arkanoid(canvas: HTMLCanvasElement){
         if(!playing){
             drawResult(canvas)
         }
-    }()
+
+    }(pTimestamp)
 
 }
 

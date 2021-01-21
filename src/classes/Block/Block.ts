@@ -3,6 +3,8 @@ import Atlass from "../Atlass";
 import Ball from "../Ball";
 import BaseBlock from "../BaseBlock";
 
+export type BlockColor = "red" | "yellow" | "green" | "pink";
+
 class Block extends Sprite {
     color:  string
 
@@ -11,10 +13,12 @@ class Block extends Sprite {
         atlass: Atlass,
         x: number,
         y: number,
-        color: string
+        width: number,
+        height: number,
+        color: BlockColor
     ) {
         const context: CanvasRenderingContext2D = canvas.getContext('2d');
-        super(context, atlass, x, y, 50, 20);
+        super(context, atlass, x, y, width, height);
         this.color = color;
     }
 
