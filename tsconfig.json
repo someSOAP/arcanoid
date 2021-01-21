@@ -2,11 +2,11 @@
   "compilerOptions": {
     "outDir": "./dist/",
     "noImplicitAny": false,
-    "module": "esnext",
+    "module": "ES6",
     "target": "es5",
     "jsx": "react",
     "allowJs": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "sourceMap": true,
     "allowSyntheticDefaultImports": true
   },

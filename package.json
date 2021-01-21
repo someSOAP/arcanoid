@@ -22,6 +22,10 @@
   "homepage": "https://github.com/someSOAP/arkanoid#readme",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.22",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },
