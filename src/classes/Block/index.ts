@@ -1,3 +1,3 @@
 import Block from "./Block";
-export { BlockColor } from './Block'
+export type { BlockColor } from './Block'
 export default Block;
