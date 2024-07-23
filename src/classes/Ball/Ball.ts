@@ -1,5 +1,5 @@
-import Sprite from "../Sprite";
-import { ball as ballAtlas } from '../../sprites/atlas'
+import Sprite from "@/classes/Sprite";
+import { ball as ballAtlas } from '@/sprites/atlas'
 
 class Ball extends Sprite {
     speed: number;

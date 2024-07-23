@@ -1,7 +1,7 @@
-import Sprite from "../Sprite";
-import Atlass from "../Atlass";
-import Ball from "../Ball";
-import BaseBlock from "../BaseBlock";
+import Sprite from "@/classes/Sprite";
+import Atlas from "@/classes/Atlas";
+import Ball from "@/classes/Ball";
+import BaseBlock from "@/classes/BaseBlock";
 
 export type BlockColor = "red" | "yellow" | "green" | "pink";
 
@@ -10,15 +10,20 @@ class Block extends Sprite {
 
     constructor(
         canvas: HTMLCanvasElement,
-        atlass: Atlass,
+        atlas: Atlas,
         x: number,
         y: number,
         width: number,
         height: number,
         color: BlockColor
     ) {
-        const context: CanvasRenderingContext2D = canvas.getContext('2d');
-        super(context, atlass, x, y, width, height);
+        const context = canvas.getContext('2d');
+
+        if(!context) {
+            throw new Error('Canvas 2D context is null')
+        }
+
+        super(context, atlas, x, y, width, height);
         this.color = color;
     }
 

@@ -1,7 +1,8 @@
 import Block from "@/classes/Block";
-import { blockAtlas } from "../sprites/atlas";
-import getRandom from "./getRandom";
+import { blockAtlas } from "@/sprites/atlas";
 import { BlockColor } from "@/classes/Block";
+
+import getRandom from "./getRandom";
 
 function initBlocks(canvas: HTMLCanvasElement): Array<Block> {
     const blocks : Array<Block> = []

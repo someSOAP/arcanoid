@@ -1,6 +1,6 @@
-import Sprite from "../Sprite";
-import Ball from "../Ball";
-import { platform as platformAtlas } from '../../sprites/atlas'
+import Sprite from "@/classes/Sprite";
+import Ball from "@/classes/Ball";
+import { platform as platformAtlas } from '@/sprites/atlas'
 
 class Platform extends Sprite {
     canvas: HTMLCanvasElement;
@@ -13,7 +13,12 @@ class Platform extends Sprite {
         x: number,
         y: number,
     ) {
-        const context: CanvasRenderingContext2D = canvas.getContext('2d');
+        const context = canvas.getContext('2d');
+
+        if(!context) {
+            throw new Error('Canvas 2D context is null')
+        }
+
         super(context, platformAtlas, x, y, 150, 20);
 
         this.canvas = canvas;
@@ -22,12 +27,12 @@ class Platform extends Sprite {
         this.rightKey = false;
     }
 
-    moveLeft(dTime): void {
+    moveLeft(dTime: number): void {
         const { x, speed } = this;
         this.x = Math.max(0, x - dTime * speed)
     }
 
-    moveRight(dTime): void {
+    moveRight(dTime: number): void {
         const { canvas, width, x, speed } = this;
         this.x = Math.min(canvas.width - width, x + dTime * speed)
     }

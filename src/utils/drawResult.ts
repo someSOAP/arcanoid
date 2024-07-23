@@ -1,5 +1,9 @@
 function drawResult (canvas: HTMLCanvasElement): void {
-    const context: CanvasRenderingContext2D = canvas.getContext('2d')
+    const context = canvas.getContext('2d')
+
+    if(!context) {
+        throw new Error('Canvas 2D context is null')
+    }
 
     context.beginPath()
     context.rect(0, 0, canvas.width, canvas.height)

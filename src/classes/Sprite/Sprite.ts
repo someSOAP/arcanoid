@@ -1,18 +1,18 @@
-import Atlass from "../Atlass";
-// @ts-ignore
-import sprites from '../../sprites/sprites.png'
-import Block from "../BaseBlock";
+import Atlas from "@/classes/Atlas";
+import Block from "@/classes/BaseBlock";
+
+import sprites from '@/sprites/sprites.png'
 
 const spriteImg = new Image;
 spriteImg.src = sprites;
 
 class Sprite extends Block {
     context: CanvasRenderingContext2D;
-    atlass: Atlass;
+    atlas: Atlas;
 
     constructor(
         context: CanvasRenderingContext2D,
-        atlass: Atlass,
+        atlas: Atlas,
         x: number,
         y: number,
         width: number,
@@ -20,7 +20,7 @@ class Sprite extends Block {
     ) {
         super(x, y, width, height)
         this.context = context
-        this.atlass = atlass
+        this.atlas = atlas
     }
 
     updatePosition (x: number, y: number) : void {
@@ -32,10 +32,10 @@ class Sprite extends Block {
 
 
     render() : void{
-        const { context, atlass, x, y, width, height } = this;
+        const { context, atlas, x, y, width, height } = this;
         context.drawImage(
             spriteImg,
-            atlass.x, atlass.y, atlass.width, atlass.height,
+            atlas.x, atlas.y, atlas.width, atlas.height,
             x, y, width, height
         )
     }

@@ -1,6 +1,6 @@
 import { CanvasObject } from "@/types";
 
-class Atlass implements CanvasObject {
+class Atlas implements CanvasObject {
     x: number;
     y: number;
     width: number;
@@ -14,4 +14,4 @@ class Atlass implements CanvasObject {
     }
 
 }
-export default Atlass;
+export default Atlas;
