@@ -6,7 +6,7 @@ import drawResult from "@/utils/drawResult";
 import clearCanvas from "@/utils/clearCanvas";
 import toggleItem from "@/utils/toggleItem";
 import initBlocks from "@/utils/initBlocks";
-import { GameParams } from "@/types/types"
+import { GameParams } from "@/types"
 import Limits from "@/classes/Limits";
 
 const arkanoid = (canvas: HTMLCanvasElement, gameParams: GameParams) => {
@@ -23,9 +23,9 @@ const arkanoid = (canvas: HTMLCanvasElement, gameParams: GameParams) => {
         new BaseBlock(-10, 0, 10, canvas.height)
     )
 
-    document.onkeydown = (event) => {
+    document.addEventListener('keydown', (event) => {
         if(event.key === 'ArrowUp') {
-            slowDownCf = 400
+            slowDownCf = 200
         }
         if(event.key === 'ArrowLeft') {
             platform.leftKey = true
@@ -39,9 +39,10 @@ const arkanoid = (canvas: HTMLCanvasElement, gameParams: GameParams) => {
             platform = new Platform(canvas, canvas.width / 2 - 100, canvas.height - 30)
             blocks   = initBlocks(canvas)
         }
-    }
+    })
 
-    document.onkeyup = (event) => {
+
+    document.addEventListener('keyup', (event) => {
         if(event.key === 'ArrowUp') {
             slowDownCf = 1000
         }
@@ -51,7 +52,7 @@ const arkanoid = (canvas: HTMLCanvasElement, gameParams: GameParams) => {
         if(event.key === 'ArrowRight') {
             platform.rightKey = false;
         }
-    }
+    })
 
     let pTimestamp: number = 0;
     let playing: boolean = false;
@@ -59,11 +60,11 @@ const arkanoid = (canvas: HTMLCanvasElement, gameParams: GameParams) => {
     const gameId: string = gameParams.id;
 
     void function loop(timestamp: number){
-        if(gameId === gameParams.id){
-            requestAnimationFrame(loop)
-        } else {
+        if(gameId !== gameParams.id){
             return void 0;
         }
+
+        requestAnimationFrame(loop)
 
         clearCanvas(canvas);
 

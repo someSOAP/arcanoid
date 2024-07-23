@@ -1,4 +1,4 @@
-import Atlass from "../classes/Atlass";
+import Atlass from "@/classes/Atlass";
 import {BlockColor} from "@/classes/Block";
 
 type SpriteAtlas = {

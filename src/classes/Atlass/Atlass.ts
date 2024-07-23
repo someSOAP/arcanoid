@@ -1,6 +1,6 @@
-import CanvasObjectInterface from "../../interfaces/CanvasObjectInterface";
+import { CanvasObject } from "@/types";
 
-class Atlass implements CanvasObjectInterface {
+class Atlass implements CanvasObject {
     x: number;
     y: number;
     width: number;

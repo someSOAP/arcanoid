@@ -1,12 +1,12 @@
-import CanvasObjectInterface from "../../interfaces/CanvasObjectInterface";
+import { CanvasObject } from "@/types";
 
-class BaseBlock implements CanvasObjectInterface {
+class BaseBlock implements CanvasObject {
     x: number;
     y: number;
     width: number;
     height: number;
 
-    constructor(x, y, width, height) {
+    constructor(x: number, y: number, width: number, height: number) {
         this.x = x;
         this.y = y;
         this.width = width;
