@@ -1,4 +1,4 @@
-import Sprite from '@/classes/Sprite'
+import { Sprite } from '@/classes/Sprite'
 
 class Ball extends Sprite {
   speed: number
@@ -7,7 +7,14 @@ class Ball extends Sprite {
   constructor(canvas: HTMLCanvasElement, x: number, y: number) {
     const context: CanvasRenderingContext2D = canvas.getContext('2d')!
 
-    super(context, x, y, 10, 10, 'white')
+    super(context, {
+      x,
+      y,
+      width: 10,
+      height: 10,
+      color: 'white',
+      borderRadius: 10,
+    })
     this.x = x
     this.y = y
     this.speed = 200

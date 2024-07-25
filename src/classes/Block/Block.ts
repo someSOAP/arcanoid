@@ -1,26 +1,16 @@
-import Sprite from '@/classes/Sprite'
+import { Sprite, SpriteProps } from '@/classes/Sprite'
 import Ball from '@/classes/Ball'
 import BaseBlock from '@/classes/BaseBlock'
 
 class Block extends Sprite {
-  color: string
-
-  constructor(
-    canvas: HTMLCanvasElement,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    color: string,
-  ) {
+  constructor(canvas: HTMLCanvasElement, spriteProps: SpriteProps) {
     const context = canvas.getContext('2d')
 
     if (!context) {
       throw new Error('Canvas 2D context is null')
     }
 
-    super(context, x, y, width, height, color)
-    this.color = color
+    super(context, spriteProps)
   }
 
   checkIfIntersectedByBall(ball: Ball): boolean {

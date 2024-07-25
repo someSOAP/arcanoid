@@ -17,14 +17,13 @@ function initBlocks(canvas: HTMLCanvasElement): Array<Block> {
       const color = getRandomBlockColor()
 
       blocks.push(
-        new Block(
-          canvas,
-          padding + blockWidth * x,
-          padding + blockHeight * y,
-          blockWidth,
-          blockHeight,
+        new Block(canvas, {
+          x: padding + blockWidth * x,
+          y: padding + blockHeight * y,
+          width: blockWidth,
+          height: blockHeight,
           color,
-        ),
+        }),
       )
     }
   }

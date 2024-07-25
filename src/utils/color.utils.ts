@@ -12,3 +12,9 @@ export const ColorMap = new Map([
 export const getRandomBlockColor = () => {
   return getRandom(Array.from(ColorMap.values()))
 }
+
+export const getPlatformColor = () => {
+  const platformColors = new Map(ColorMap)
+  platformColors.delete('dark')
+  return getRandom(Array.from(platformColors.values()))
+}

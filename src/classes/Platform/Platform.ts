@@ -1,5 +1,6 @@
-import Sprite from '@/classes/Sprite'
+import { Sprite } from '@/classes/Sprite'
 import Ball from '@/classes/Ball'
+import { getPlatformColor } from '@/utils'
 
 class Platform extends Sprite {
   canvas: HTMLCanvasElement
@@ -14,7 +15,14 @@ class Platform extends Sprite {
       throw new Error('Canvas 2D context is null')
     }
 
-    super(context, x, y, 150, 20, 'white')
+    super(context, {
+      x,
+      y,
+      width: 150,
+      height: 20,
+      color: getPlatformColor(),
+      borderRadius: 5,
+    })
 
     this.canvas = canvas
     this.speed = 300
