@@ -19,6 +19,7 @@ body {
   min-width: 320px;
   overflow: hidden;
   height: 100dvh;
+  background-image: url("public/space.jpg");
 }
 
 
