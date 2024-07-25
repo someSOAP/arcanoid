@@ -2,11 +2,9 @@ import Ball from '@/classes/Ball'
 import BaseBlock from '@/classes/BaseBlock'
 import Platform from '@/classes/Platform'
 import Block from '@/classes/Block'
-import drawResult from '@/utils/drawResult'
-import clearCanvas from '@/utils/clearCanvas'
-import toggleItem from '@/utils/toggleItem'
-import initBlocks from '@/utils/initBlocks'
 import Limits from '@/classes/Limits'
+
+import { clearCanvas, drawResult, toggleItem, initBlocks } from '@/utils'
 
 const game = (canvas: HTMLCanvasElement) => {
   const MAX_SLOW_DOWN = 750

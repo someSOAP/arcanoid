@@ -23,9 +23,26 @@ body {
 }
 
 
-#app {
+canvas {
   height: 100%;
   width: 100%;
   margin: 0 auto;
-  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+#video-canvas {
+  z-index: 0;
+}
+
+#game-canvas {
+  z-index: 1;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  visibility: hidden;
 }

@@ -1,4 +1,4 @@
-function toggleItem(array: Array<any>, item: any): void {
+export const toggleItem = <T>(array: Array<T>, item: T) => {
   const indexOfItem = array.indexOf(item)
 
   if (indexOfItem >= 0) {
@@ -7,5 +7,3 @@ function toggleItem(array: Array<any>, item: any): void {
     array.push(item)
   }
 }
-
-export default toggleItem

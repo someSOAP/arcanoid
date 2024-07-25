@@ -1,4 +1,4 @@
-export * from './clearCanvas'
+export * from './canvas.utils.ts'
 export * from './color.utils.ts'
 export * from './debounce.utils.ts'
 export * from './drawResult.ts'
