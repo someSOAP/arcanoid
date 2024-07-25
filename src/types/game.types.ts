@@ -1,3 +1,3 @@
 export interface GameParams {
-    id: string
+  id: string
 }

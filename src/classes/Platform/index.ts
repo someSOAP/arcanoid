@@ -1,2 +1,2 @@
-import Platform from "./Platform";
-export default Platform;
+import Platform from './Platform'
+export default Platform

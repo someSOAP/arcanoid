@@ -1,2 +1,2 @@
-import Limits from "./Limits"
+import Limits from './Limits'
 export default Limits

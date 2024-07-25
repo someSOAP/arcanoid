@@ -1,2 +1,2 @@
-import Sprite from "./Sprite";
-export default Sprite;
+import Sprite from './Sprite'
+export default Sprite

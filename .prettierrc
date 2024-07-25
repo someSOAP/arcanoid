@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "plugin:prettier/recommended"
+  ],
+  "tabWidth": 2,
+  "singleQuote": true,
+  "endOfLine": "auto",
+  "semi": false,
+  "quoteProps": "consistent"
+}

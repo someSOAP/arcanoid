@@ -1,0 +1,6 @@
+export * from './clearCanvas'
+export * from './color.utils.ts'
+export * from './drawResult.ts'
+export * from './getRandom.ts'
+export * from './initBlocks.ts'
+export * from './toggleItem.ts'
