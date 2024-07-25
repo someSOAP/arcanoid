@@ -7,21 +7,23 @@ function drawResult(canvas: HTMLCanvasElement): void {
 
   context.beginPath()
   context.rect(0, 0, canvas.width, canvas.height)
-  context.fillStyle = 'rgba(255, 255, 255, 0.5)'
+  context.fillStyle = 'rgba(255, 255, 255, 0.7)'
   context.fill()
 
-  context.fillStyle = 'black'
-  context.font = '30px Tahoma'
+  context.fillStyle = '#03175c'
+  context.font = 'bold 48px Tahoma'
   context.textAlign = 'center'
-  context.fillText('Конец игры', canvas.width / 2, canvas.height / 2)
+  context.fillText('ARCANOID', canvas.width / 2, canvas.height / 2)
 
-  context.fillStyle = 'black'
-  context.font = '12px Tahoma'
+  const isMobile = window.matchMedia('(pointer: coarse)').matches
+
+  context.fillStyle = '#414d75'
+  context.font = '24px Tahoma'
   context.textAlign = 'center'
   context.fillText(
-    'Для продолжения нажмите Enter',
+    isMobile ? 'Tap to continue' : 'Press any key to continue',
     canvas.width / 2,
-    canvas.height / 2 + 20,
+    canvas.height / 2 + 48,
   )
 }
 

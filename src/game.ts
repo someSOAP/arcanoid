@@ -6,11 +6,13 @@ import drawResult from '@/utils/drawResult'
 import clearCanvas from '@/utils/clearCanvas'
 import toggleItem from '@/utils/toggleItem'
 import initBlocks from '@/utils/initBlocks'
-import { GameParams } from '@/types'
 import Limits from '@/classes/Limits'
 
-const arkanoid = (canvas: HTMLCanvasElement, gameParams: GameParams) => {
-  let slowDownCf: number = 1000
+const game = (canvas: HTMLCanvasElement) => {
+  const MAX_SLOW_DOWN = 750
+  const MIN_SLOW_DOWN = 250
+
+  let slowDownCf: number = MAX_SLOW_DOWN
   let ball: Ball = new Ball(canvas, canvas.width / 2, canvas.height - 50)
   let platform: Platform = new Platform(
     canvas,
@@ -19,6 +21,9 @@ const arkanoid = (canvas: HTMLCanvasElement, gameParams: GameParams) => {
   )
   let blocks: Array<Block> = initBlocks(canvas)
 
+  let initTouchX: number | undefined = undefined
+  let initTouchY: number | undefined = undefined
+
   const limits: Limits = new Limits(
     new BaseBlock(0, -10, canvas.width, 10),
     new BaseBlock(canvas.width, 0, 10, canvas.height),
@@ -26,9 +31,16 @@ const arkanoid = (canvas: HTMLCanvasElement, gameParams: GameParams) => {
     new BaseBlock(-10, 0, 10, canvas.height),
   )
 
-  document.addEventListener('keydown', (event) => {
+  const startGame = () => {
+    playing = true
+    ball = new Ball(canvas, canvas.width / 2, canvas.height - 50)
+    platform = new Platform(canvas, canvas.width / 2 - 100, canvas.height - 30)
+    blocks = initBlocks(canvas)
+  }
+
+  const onKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'ArrowUp') {
-      slowDownCf = 200
+      slowDownCf = MIN_SLOW_DOWN
     }
     if (event.key === 'ArrowLeft') {
       platform.leftKey = true
@@ -36,21 +48,15 @@ const arkanoid = (canvas: HTMLCanvasElement, gameParams: GameParams) => {
     if (event.key === 'ArrowRight') {
       platform.rightKey = true
     }
-    if (event.key === 'Enter' && !playing) {
-      playing = true
-      ball = new Ball(canvas, canvas.width / 2, canvas.height - 50)
-      platform = new Platform(
-        canvas,
-        canvas.width / 2 - 100,
-        canvas.height - 30,
-      )
-      blocks = initBlocks(canvas)
-    }
-  })
 
-  document.addEventListener('keyup', (event) => {
+    if (!playing) {
+      startGame()
+    }
+  }
+
+  const onKeyUp = (event: KeyboardEvent) => {
     if (event.key === 'ArrowUp') {
-      slowDownCf = 1000
+      slowDownCf = MAX_SLOW_DOWN
     }
     if (event.key === 'ArrowLeft') {
       platform.leftKey = false
@@ -58,16 +64,70 @@ const arkanoid = (canvas: HTMLCanvasElement, gameParams: GameParams) => {
     if (event.key === 'ArrowRight') {
       platform.rightKey = false
     }
-  })
+  }
+
+  document.addEventListener('keydown', onKeyDown)
+  document.addEventListener('keyup', onKeyUp)
+
+  const onTouchStart = (event: TouchEvent) => {
+    if (!playing) {
+      startGame()
+    }
+    const touch = event.targetTouches.item(0)
+    if (!touch) {
+      return
+    }
+    initTouchX = touch.clientX
+    initTouchY = touch.clientY
+  }
+
+  const onTouchMove = (event: TouchEvent) => {
+    if (!initTouchX || !initTouchY) {
+      return
+    }
+
+    const touch = event.targetTouches.item(0)
+    if (!touch) {
+      return
+    }
+
+    const touchXDiff = Math.abs(Math.min(touch.clientY - initTouchY, 0))
+
+    slowDownCf = Math.max(MAX_SLOW_DOWN - touchXDiff * 3, 250)
+
+    if (touch.clientX > initTouchX) {
+      platform.leftKey = false
+      platform.rightKey = true
+      return
+    }
+
+    if (touch.clientX < initTouchX) {
+      platform.rightKey = false
+      platform.leftKey = true
+      return
+    }
+  }
+
+  const onTouchEnd = () => {
+    platform.rightKey = false
+    platform.leftKey = false
+    slowDownCf = MAX_SLOW_DOWN
+    initTouchX = undefined
+    initTouchY = undefined
+  }
+
+  document.addEventListener('touchstart', onTouchStart)
+  document.addEventListener('touchmove', onTouchMove)
+  document.addEventListener('touchend', onTouchEnd)
 
   let pTimestamp: number = 0
   let playing: boolean = false
 
-  const gameId: string = gameParams.id
+  let isUnsubscribed = false
 
   void (function loop(timestamp: number) {
-    if (gameId !== gameParams.id) {
-      return void 0
+    if (isUnsubscribed) {
+      return
     }
 
     requestAnimationFrame(loop)
@@ -123,6 +183,16 @@ const arkanoid = (canvas: HTMLCanvasElement, gameParams: GameParams) => {
       drawResult(canvas)
     }
   })(pTimestamp)
+
+  return () => {
+    isUnsubscribed = true
+    document.removeEventListener('keydown', onKeyDown)
+    document.removeEventListener('keyup', onKeyUp)
+
+    document.removeEventListener('touchstart', onTouchStart)
+    document.removeEventListener('touchmove', onTouchMove)
+    document.removeEventListener('touchend', onTouchEnd)
+  }
 }
 
-export default arkanoid
+export default game
