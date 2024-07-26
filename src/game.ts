@@ -3,13 +3,15 @@ import BaseBlock from '@/classes/BaseBlock'
 import Platform from '@/classes/Platform'
 import Block from '@/classes/Block'
 import Limits from '@/classes/Limits'
+import { VideoMemes } from '@/classes/VideoMemes'
 
 import { clearCanvas, drawResult, toggleItem, initBlocks } from '@/utils'
 
-const game = (canvas: HTMLCanvasElement) => {
+const game = (canvas: HTMLCanvasElement, video: VideoMemes) => {
   const MAX_SLOW_DOWN = 750
   const MIN_SLOW_DOWN = 250
 
+  let lastHitTs = 0
   let slowDownCf: number = MAX_SLOW_DOWN
   let ball: Ball = new Ball(canvas, canvas.width / 2, canvas.height - 50)
   let platform: Platform = new Platform(
@@ -30,6 +32,8 @@ const game = (canvas: HTMLCanvasElement) => {
   )
 
   const startGame = () => {
+    video.setSadMood(true)
+    video.play()
     playing = true
     ball = new Ball(canvas, canvas.width / 2, canvas.height - 50)
     platform = new Platform(canvas, canvas.width / 2 - 100, canvas.height - 30)
@@ -137,6 +141,8 @@ const game = (canvas: HTMLCanvasElement) => {
       const secondPart: number = dTimestamp / slowDownCf
       pTimestamp = timestamp
 
+      video.setSadMood(timestamp - lastHitTs > 1000)
+
       ball.updatePosition(secondPart)
 
       if (platform.leftKey) {
@@ -149,6 +155,7 @@ const game = (canvas: HTMLCanvasElement) => {
 
       for (const block of blocks) {
         if (block.checkIfIntersectedByBall(ball)) {
+          lastHitTs = timestamp
           toggleItem(blocks, block)
         }
       }
@@ -178,6 +185,7 @@ const game = (canvas: HTMLCanvasElement) => {
     }
 
     if (!playing) {
+      video.stop()
       drawResult(canvas)
     }
   })(pTimestamp)
