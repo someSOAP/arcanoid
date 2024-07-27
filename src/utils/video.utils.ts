@@ -32,3 +32,23 @@ export const getSadCatVideo = () => {
 export const getCatVideo = (isSad: boolean) => {
   return isSad ? getSadCatVideo() : getHappyCatVideo()
 }
+
+export const preloadAllVideos = async () => {
+  const sadCatsFetches = Promise.all(sadCats.map((it) => fetch(it)))
+  const happyCatsFetches = Promise.all(happyCats.map((it) => fetch(it)))
+
+  const [sadCatsResponses, happyCatsResponses] = await Promise.all([
+    sadCatsFetches,
+    happyCatsFetches,
+  ])
+
+  const sadCatsBlobs = Promise.all(sadCatsResponses.map((it) => it.blob()))
+  const happyCatsBlobs = Promise.all(happyCatsResponses.map((it) => it.blob()))
+
+  const [sad, happy] = await Promise.all([sadCatsBlobs, happyCatsBlobs])
+
+  return {
+    sad: sad.map((it) => URL.createObjectURL(it)),
+    happy: happy.map((it) => URL.createObjectURL(it)),
+  }
+}

@@ -1,20 +1,27 @@
-import { getCatVideo } from '@/utils'
+import { getRandom } from '@/utils'
+import { CatVideosPreloaded } from '@/types'
 
 export class VideoMemes {
   isPlaying: boolean
   isSad: boolean
   video: HTMLVideoElement
+  catVideosPreloaded: CatVideosPreloaded
 
-  constructor(video: HTMLVideoElement) {
+  constructor(video: HTMLVideoElement, catVideosPreloaded: CatVideosPreloaded) {
     this.video = video
     this.isSad = true
     this.isPlaying = false
+    this.catVideosPreloaded = catVideosPreloaded
     this.video.addEventListener('ended', this.playNext)
   }
 
   private playNext = () => {
-    this.video.src = getCatVideo(this.isSad)
+    this.video.src = this.getCatVideo()
     this.play()
+  }
+
+  private getCatVideo() {
+    return getRandom(this.catVideosPreloaded[this.isSad ? 'sad' : 'happy'])
   }
 
   async play() {
@@ -36,7 +43,7 @@ export class VideoMemes {
     }
     console.log('CHANGING MOOD TO ', val ? 'SAD' : 'HAPI')
     this.isSad = val
-    this.video.src = getCatVideo(val)
+    this.video.src = this.getCatVideo()
     this.play()
   }
 }

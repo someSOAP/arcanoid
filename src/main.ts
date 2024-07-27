@@ -1,34 +1,31 @@
-import './style.css'
 import game from './game.ts'
-import { adjustCanvasSize, getCatVideo } from '@/utils'
+import { adjustCanvasSize, getCatVideo, preloadAllVideos } from '@/utils'
 import { VideoMemes } from '@/classes/VideoMemes'
 
-const video = document.createElement('video')
-video.id = 'memes-video'
-video.autoplay = false
-video.muted = false
-// const videoSrc = document.createElement('source')
-video.src = getCatVideo(true)
-// video.type = 'video/mp4'
-// video.appendChild(videoSrc)
-document.body.appendChild(video)
+const initGame = async () => {
+  const videoLinks = await preloadAllVideos()
 
-// video.addEventListener('ended', () => {
-//   video.src = getCatVideo(true)
-//   video.play()
-// })
+  const video = document.createElement('video')
+  video.id = 'memes-video'
+  video.autoplay = false
+  video.muted = false
+  video.src = getCatVideo(true)
+  document.body.appendChild(video)
 
-const videoMeme = new VideoMemes(video)
-const gameCanvas = document.createElement('canvas')
-gameCanvas.id = 'game-canvas'
-adjustCanvasSize(gameCanvas)
-document.body.appendChild(gameCanvas)
-
-let unsubscribe = game(gameCanvas, videoMeme)
-
-window.addEventListener('resize', () => {
-  videoMeme.stop()
-  unsubscribe()
+  const videoMeme = new VideoMemes(video, videoLinks)
+  const gameCanvas = document.createElement('canvas')
+  gameCanvas.id = 'game-canvas'
   adjustCanvasSize(gameCanvas)
-  unsubscribe = game(gameCanvas, videoMeme)
-})
+  document.body.appendChild(gameCanvas)
+
+  let unsubscribe = game(gameCanvas, videoMeme)
+
+  window.addEventListener('resize', () => {
+    videoMeme.stop()
+    unsubscribe()
+    adjustCanvasSize(gameCanvas)
+    unsubscribe = game(gameCanvas, videoMeme)
+  })
+}
+
+initGame()
