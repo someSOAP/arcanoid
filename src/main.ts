@@ -18,6 +18,8 @@ const initGame = async () => {
   adjustCanvasSize(gameCanvas)
   document.body.appendChild(gameCanvas)
 
+  document.body.querySelector('#loader-wrapper')?.remove()
+
   let unsubscribe = game(gameCanvas, videoMeme)
 
   window.addEventListener('resize', () => {
