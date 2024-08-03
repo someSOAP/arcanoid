@@ -9,6 +9,7 @@ const initGame = async () => {
   video.id = 'memes-video'
   video.autoplay = false
   video.muted = false
+  video.playsInline = true
   video.src = getCatVideo(true)
   document.body.appendChild(video)
 
