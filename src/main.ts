@@ -1,9 +1,9 @@
 import game from './game.ts'
-import { adjustCanvasSize, getCatVideo, preloadAllVideos } from '@/utils'
+import { adjustCanvasSize, fetchCatsVideos, getCatVideo } from '@/utils'
 import { VideoMemes } from '@/classes/VideoMemes'
 
 const initGame = async () => {
-  const videoLinks = await preloadAllVideos()
+  const videoLinks = await fetchCatsVideos()
 
   const video = document.createElement('video')
   video.id = 'memes-video'

@@ -41,7 +41,6 @@ export class VideoMemes {
     if (val === this.isSad) {
       return
     }
-    console.log('CHANGING MOOD TO ', val ? 'SAD' : 'HAPI')
     this.isSad = val
     this.video.src = this.getCatVideo()
     this.play()

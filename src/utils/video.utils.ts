@@ -33,22 +33,45 @@ export const getCatVideo = (isSad: boolean) => {
   return isSad ? getSadCatVideo() : getHappyCatVideo()
 }
 
-export const preloadAllVideos = async () => {
-  const sadCatsFetches = Promise.all(sadCats.map((it) => fetch(it)))
-  const happyCatsFetches = Promise.all(happyCats.map((it) => fetch(it)))
+export const fetchCatsVideos = async () => {
+  const preloadVideo = async (url: string) => {
+    try {
+      const res = await fetch(url)
+      const blob = await res.blob()
+      return URL.createObjectURL(blob)
+    } catch (err) {
+      console.error(`Failed to load ${url} video. Reason: `, err)
+      throw err
+    }
+  }
 
-  const [sadCatsResponses, happyCatsResponses] = await Promise.all([
-    sadCatsFetches,
-    happyCatsFetches,
+  const [firstSadCat, ...restSadCats] = sadCats
+  const [firstHappyCat, ...restHappyCats] = happyCats
+
+  const [sadRes, happyRes] = await Promise.all([
+    fetch(firstSadCat),
+    fetch(firstHappyCat),
   ])
 
-  const sadCatsBlobs = Promise.all(sadCatsResponses.map((it) => it.blob()))
-  const happyCatsBlobs = Promise.all(happyCatsResponses.map((it) => it.blob()))
+  const [firstSadVidBlob, firstHappyVidBlob] = await Promise.all([
+    sadRes.blob(),
+    happyRes.blob(),
+  ])
 
-  const [sad, happy] = await Promise.all([sadCatsBlobs, happyCatsBlobs])
+  const sadVideos: string[] = [URL.createObjectURL(firstSadVidBlob)]
+  const happyVideos: string[] = [URL.createObjectURL(firstHappyVidBlob)]
+
+  setTimeout(() => {
+    restHappyCats.forEach((url) => {
+      preloadVideo(url).then((url) => happyVideos.push(url))
+    })
+    restSadCats.forEach((url) => {
+      preloadVideo(url).then((url) => sadVideos.push(url))
+    })
+  })
 
   return {
-    sad: sad.map((it) => URL.createObjectURL(it)),
-    happy: happy.map((it) => URL.createObjectURL(it)),
+    sad: sadVideos,
+    happy: happyVideos,
   }
 }
